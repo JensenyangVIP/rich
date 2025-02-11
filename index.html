@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>副业评估工具</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        /* 符合互联网打工人审美的UI设计 */
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background: #f0f2f5;
+            padding: 20px;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 20px auto;
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .question-group {
+            margin-bottom: 25px;
+            padding: 15px;
+            border: 1px solid #e8e8e8;
+            border-radius: 8px;
+            transition: all 0.3s;
+        }
+
+        .question-group:hover {
+            box-shadow: 0 2px 8px rgba(24, 144, 255, 0.2);
+        }
+
+        h3 {
+            color: #1890ff;
+            margin-bottom: 15px;
+        }
+
+        .option-item {
+            margin: 10px 0;
+            padding: 12px;
+            background: #fafafa;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .option-item:hover {
+            background: #e6f7ff;
+            transform: translateX(5px);
+        }
+
+        #resultSection {
+            display: none;
+            padding: 20px;
+            background: #f6ffed;
+            border: 1px solid #b7eb8f;
+            border-radius: 8px;
+        }
+
+        .showlink {
+            background: #1890ff;
+            color: white;
+            padding: 12px 25px;
+            border-radius: 25px;
+            display: inline-block;
+            margin-top: 20px;
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+        .call-to-action {
+            background: #1890ff;
+            color: white;
+            padding: 12px 25px;
+            border-radius: 25px;
+            display: inline-block;
+            margin-top: 20px;
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div id="">
+            <a href="./01-side-job-risk-assessment.html" class="showlink"> 01 副业项目风险评估工具</a>
+            <a href="./02-side-job-values-assessment.html" class="showlink"> 02 副业可行性评估工具</a>
+        </div>
+        <div id="">
+            <a href="#" class="call-to-action">👉 关注我</a>
+        </div>
+    </div>
+
+    <script>
+        $(document).ready(function () {
+            // 引流设计
+            $('.call-to-action').click(function (e) {
+                e.preventDefault();
+                alert("关注微信公众号【Jensen不惑】获取:\n1. 大厂人转型案例\n2. 低风险创业手册\n3. 私域流量搭建指南");
+            });
+        });
+    </script>
+</body>
+
+</html>

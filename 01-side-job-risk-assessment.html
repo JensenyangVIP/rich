@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>副业项目风险评估工具</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        /* 符合互联网打工人审美的UI设计 */
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background: #f0f2f5;
+            padding: 20px;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 20px auto;
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .question-group {
+            margin-bottom: 25px;
+            padding: 15px;
+            border: 1px solid #e8e8e8;
+            border-radius: 8px;
+            transition: all 0.3s;
+        }
+
+        .question-group:hover {
+            box-shadow: 0 2px 8px rgba(24, 144, 255, 0.2);
+        }
+
+        h3 {
+            color: #1890ff;
+            margin-bottom: 15px;
+        }
+
+        .option-item {
+            margin: 10px 0;
+            padding: 12px;
+            background: #fafafa;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .option-item:hover {
+            background: #e6f7ff;
+            transform: translateX(5px);
+        }
+
+        #resultSection {
+            display: none;
+            padding: 20px;
+            background: #f6ffed;
+            border: 1px solid #b7eb8f;
+            border-radius: 8px;
+        }
+
+        .call-to-action {
+            background: #1890ff;
+            color: white;
+            padding: 12px 25px;
+            border-radius: 25px;
+            display: inline-block;
+            margin-top: 20px;
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h2>📊 副业项目可行性自测</h2>
+        <p style="color: #666; margin-bottom: 25px;">大厂程序员开发的10项风险评估模型</p>
+
+        <div id="assessmentForm">
+            <!-- 动态生成的问题区域 -->
+        </div>
+
+        <div id="resultSection">
+            <h3>💡 评估结果</h3>
+            <p>综合得分：<span id="totalScore">0</span></p>
+            <p id="riskLevel"></p>
+            <p id="actionSuggest"></p>
+            <a href="#" class="call-to-action">👉 获取完整评估报告</a>
+        </div>
+    </div>
+
+    <script>
+        $(document).ready(function () {
+            // 符合普通大众认知的评估维度
+            const questions = [
+                {
+                    question: "启动资金是否超过月收入的20%？",
+                    options: [
+                        { text: "完全不需要（+15）", score: 15 },
+                        { text: "10%以内（+10）", score: 10 },
+                        { text: "20%左右（+5）", score: 5 },
+                        { text: "需要贷款（-10）", score: -10 }
+                    ]
+                },
+                {
+                    question: "每日可投入时间（不含主业）",
+                    options: [
+                        { text: "1小时以内（+15）", score: 15 },
+                        { text: "1-2小时（+10）", score: 10 },
+                        { text: "需要熬夜做（-5）", score: -5 },
+                        { text: "影响本职工作（-15）", score: -15 }
+                    ]
+                },
+                {
+                    question: "是否已完成最小可行性验证（如10人深度访谈）？",
+                    options: [
+                        { text: "有完整调研数据（+20）", score: 20 },
+                        { text: "3-5人初步验证（+10）", score: 10 },
+                        { text: "仅凭个人经验（-5）", score: -5 },
+                        { text: "完全未验证（-15）", score: -15 }
+                    ]
+                },
+                {
+                    question: "核心技能与内容生产的匹配度",
+                    options: [
+                        { text: "完全复用现有技能（+15）", score: 15 },
+                        { text: "需要短期学习（+5）", score: 5 },
+                        { text: "需系统培训（-10）", score: -10 },
+                        { text: "完全跨界（-20）", score: -20 }
+                    ]
+                },
+                {
+                    question: "内容持续生产能力评估",
+                    options: [
+                        { text: "可自动化/模板化（+20）", score: 20 },
+                        { text: "有稳定素材渠道（+10）", score: 10 },
+                        { text: "依赖临时灵感（-5）", score: -5 },
+                        { text: "需高成本制作（-15）", score: -15 }
+                    ]
+                },
+                {
+                    question: "涉及法律风险等级",
+                    options: [
+                        { text: "纯经验分享（+10）", score: 10 },
+                        { text: "涉及版权素材（-5）", score: -5 },
+                        { text: "医疗/投资建议（-20）", score: -20 },
+                        { text: "需特殊资质（-30）", score: -30 }
+                    ]
+                },
+                {
+                    question: "收入结构健康度",
+                    options: [
+                        { text: "多元变现组合（+20）", score: 20 },
+                        { text: "广告+课程（+10）", score: 10 },
+                        { text: "单一广告收入（-10）", score: -10 },
+                        { text: "纯平台分成（-15）", score: -15 }
+                    ]
+                },
+                {
+                    question: "竞争壁垒构建可能性",
+                    options: [
+                        { text: "独特方法论体系（+25）", score: 25 },
+                        { text: "个人IP差异化（+15）", score: 15 },
+                        { text: "信息差红利（0）", score: 0 },
+                        { text: "纯热点跟风（-20）", score: -20 }
+                    ]
+                }
+            ];
+
+            // 动态生成问卷
+            let formHtml = '';
+            questions.forEach((q, index) => {
+                formHtml += `<div class="question-group">
+            <h3>Q${index + 1}: ${q.question}</h3>`;
+                q.options.forEach(opt => {
+                    formHtml += `<div class="option-item" data-score="${opt.score}">
+                <input type="radio" name="q${index}" value="${opt.score}">
+                ${opt.text}
+            </div>`;
+                });
+                formHtml += '</div>';
+            });
+            $('#assessmentForm').html(formHtml);
+
+            // 交互逻辑
+            let totalScore = 0;
+            $('.option-item').click(function () {
+                $(this).addClass('selected').siblings().removeClass('selected');
+                $(this).find('input').prop('checked', true);
+
+                // 实时计算得分
+                totalScore = 0;
+                $('input:checked').each(function () {
+                    totalScore += parseInt($(this).val());
+                });
+
+                // 显示结果板块
+                $('#resultSection').show();
+                $('#totalScore').text(totalScore);
+
+                // 结果分级逻辑
+                let advice = '';
+                if (totalScore >= 140) {
+                    advice = "✅ 优势赛道（3个月内启动）";
+                } else if (totalScore >= 100) {
+                    advice = "✅ 待优化赛道（需攻克短板）";
+                }
+                else if (totalScore >= 60) {
+                    advice = "⚠️ 中等风险，需要优化模式";
+                } else {
+                    advice = "❌ 高风险，建议重新评估";
+                }
+                $('#riskLevel').text(advice);
+            });
+
+            // 引流设计
+            $('.call-to-action').click(function (e) {
+                e.preventDefault();
+                alert("关注微信公众号【Jensen不惑】获取:\n1. 大厂人转型案例\n2. 低风险创业手册\n3. 私域流量搭建指南");
+            });
+        });
+    </script>
+</body>
+
+</html>

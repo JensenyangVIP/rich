@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>副业可行性评估工具</title>
+    <!-- 移动端适配 -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- jQuery CDN -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        .container { max-width: 800px; margin: 20px auto; padding: 20px; }
+        .section { margin-bottom: 30px; border-bottom: 1px solid #eee; padding-bottom: 20px; }
+        h3 { color: #333; margin-bottom: 15px; }
+        .question-group { margin-bottom: 20px; }
+        label { display: block; margin: 10px 0; cursor: pointer; }
+        #result { display: none; padding: 20px; background: #f8f9fa; border-radius: 5px; margin-top: 20px; }
+        .score-bar { height: 20px; background: #e9ecef; border-radius: 10px; overflow: hidden; }
+        .score-progress { height: 100%; background: #4CAF50; transition: width 0.5s; }
+        button { 
+            background: #007bff; 
+            color: white; 
+            border: none; 
+            padding: 12px 30px; 
+            border-radius: 25px; 
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        button:hover { transform: translateY(-2px); }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h2>副业可行性评估表</h2>
+    
+    <form id="assessmentForm">
+        <!-- 基础评估 -->
+        <div class="section">
+            <h3>🏃 个人基础评估</h3>
+            <div class="question-group">
+                <p>1. 每周可投入副业的时间（含学习时间）</p>
+                <label><input type="radio" name="time" value="1"> ≤5小时</label>
+                <label><input type="radio" name="time" value="3"> 6-10小时</label>
+                <label><input type="radio" name="time" value="5"> ≥11小时</label>
+            </div>
+            
+            <div class="question-group">
+                <p>2. 现有技能与目标副业的匹配度</p>
+                <label><input type="radio" name="skill" value="1"> 完全不相关</label>
+                <label><input type="radio" name="skill" value="3"> 部分技能可用</label>
+                <label><input type="radio" name="skill" value="5"> 高度匹配</label>
+            </div>
+        </div>
+
+        <!-- 资源评估 -->
+        <div class="section">
+            <h3>💼 资源评估</h3>
+            <div class="question-group">
+                <p>3. 启动资金承受范围（含设备/物料）</p>
+                <label><input type="radio" name="fund" value="1"> ≤3000元</label>
+                <label><input type="radio" name="fund" value="3"> 3001-10000元</label>
+                <label><input type="radio" name="fund" value="5"> ≥10001元</label>
+            </div>
+            
+            <div class="question-group">
+                <p>4. 可调动的有效人脉资源</p>
+                <label><input type="radio" name="connection" value="1"> 无相关人脉</label>
+                <label><input type="radio" name="connection" value="3"> 1-3个关键人</label>
+                <label><input type="radio" name="connection" value="5"> ≥4个关键人</label>
+            </div>
+        </div>
+
+        <!-- 市场评估 -->
+        <div class="section">
+            <h3>📈 市场评估</h3>
+            <div class="question-group">
+                <p>5. 目标市场的竞争激烈程度</p>
+                <label><input type="radio" name="competition" value="5"> 蓝海市场</label>
+                <label><input type="radio" name="competition" value="3"> 适度竞争</label>
+                <label><input type="radio" name="competition" value="1"> 红海市场</label>
+            </div>
+            
+            <div class="question-group">
+                <p>6. 目标客户的付费意愿评估</p>
+                <label><input type="radio" name="payment" value="1"> 低意愿</label>
+                <label><input type="radio" name="payment" value="3"> 中等意愿</label>
+                <label><input type="radio" name="payment" value="5"> 高意愿</label>
+            </div>
+        </div>
+
+        <!-- 风险控制 -->
+        <div class="section">
+            <h3>🛡️ 风险控制</h3>
+            <div class="question-group">
+                <p>7. 项目合规性风险</p>
+                <label><input type="radio" name="risk" value="5"> 完全合规</label>
+                <label><input type="radio" name="risk" value="3"> 部分灰色地带</label>
+                <label><input type="radio" name="risk" value="1"> 高风险</label>
+            </div>
+            
+            <div class="question-group">
+                <p>8. 收入波动承受能力</p>
+                <label><input type="radio" name="fluctuation" value="1"> 不能接受波动</label>
+                <label><input type="radio" name="fluctuation" value="3"> 可接受±30%</label>
+                <label><input type="radio" name="fluctuation" value="5"> 可接受±50%+</label>
+            </div>
+        </div>
+
+        <button type="button" onclick="calculateScore()">立即评估</button>
+    </form>
+
+    <div id="result">
+        <div class="score-bar">
+            <div class="score-progress" id="progress"></div>
+        </div>
+        <p id="scoreText"></p>
+        <p id="suggestion"></p>
+        <a href="#" class="call-to-action">👉 获取完整评估报告</a>
+    </div>
+</div>
+
+<script>
+function calculateScore() {
+    let total = 0;
+    // 计算各题得分
+    $('input[type="radio"]:checked').each(function() {
+        total += parseInt($(this).val());
+    });
+
+    // 显示结果
+    const maxScore = 40; // 8题×5分=40分
+    const percent = (total / maxScore * 100).toFixed(1);
+    
+    $('#progress').css('width', percent + '%');
+    $('#scoreText').html(`综合得分：${total}/${maxScore}（${percent}%）`);
+    
+    let suggestion = '';
+    if (total <= 15) {
+        suggestion = "🚨 风险预警：建议重新评估方向";
+    } else if (total <= 25) {
+        suggestion = "⚠️ 谨慎尝试：需要优化资源配比";
+    } else if (total <= 35) {
+        suggestion = "✨ 推荐执行：具备可行性条件";
+    } else {
+        suggestion = "🔥 优质项目：建议立即启动";
+    }
+    $('#suggestion').html(suggestion);
+    $('#result').fadeIn();
+}
+
+// 引流设计
+$('.call-to-action').click(function(e) {
+        e.preventDefault();
+        alert("关注微信公众号【Jensen不惑】获取:\n1. 大厂人转型案例\n2. 低风险创业手册\n3. 私域流量搭建指南");
+});
+
+</script>
+</body>
+</html>
